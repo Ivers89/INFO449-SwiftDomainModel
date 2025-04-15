@@ -37,6 +37,8 @@ class JobTests: XCTestCase {
         job.raise(byPercent: 1.0) // Nice raise, bruh
         XCTAssert(job.calculateIncome(10) == 320)
     }
+    
+    
   
     static var allTests = [
         ("testCreateSalaryJob", testCreateSalaryJob),

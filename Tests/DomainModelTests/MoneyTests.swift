@@ -80,6 +80,33 @@ class MoneyTests: XCTestCase {
     XCTAssert(total.amount == 10)
     XCTAssert(total.currency == "GBP")
   }
+    
+  func testInvalidCurrencyConversion() {
+    let invalid = Money(amount: 50, currency: "XYZ")
+    let converted = invalid.convert("USD")
+    XCTAssertEqual(converted.currency, "XYZ") // Should stay unchanged
+    XCTAssertEqual(converted.amount, 50) // Should stay unchanged
+  }
+    
+  func testCurrencyCaseInsensitivity() {
+    let money = Money(amount: 10, currency: "usd")
+    XCTAssertEqual(money.currency, "USD") //should automatically recognize lowercase valid currencies
+  }
+    
+  func testNegativeMoneyAmount() {
+    let money = Money(amount: -10, currency: "USD")
+    XCTAssertEqual(money.amount, 0) // Expect it to default to 0
+  }
+    
+  func testSubtractMoreThanAvailable() { //Check for negative money
+    let money1 = Money(amount: 5, currency: "USD")
+    let money2 = Money(amount: 30, currency: "USD")
+    let result = money1.subtract(money2) //return original money1 if it is invalid
+    print(result)
+    XCTAssertEqual(result.amount, money1.amount)
+    XCTAssertEqual(result.currency, money1.currency)
+  }
+  
 
     static var allTests = [
         ("testCanICreateMoney", testCanICreateMoney),
@@ -96,6 +123,10 @@ class MoneyTests: XCTestCase {
         
         ("testAddUSDtoUSD", testAddUSDtoUSD),
         ("testAddUSDtoGBP", testAddUSDtoGBP),
+        ("testInvalidCurrencyConversion", testInvalidCurrencyConversion),
+        ("testCurrencyCaseInsensitivity", testCurrencyCaseInsensitivity),
+        ("testNegativeMoneyAmount", testNegativeMoneyAmount),
+        ("testSubtractMoreThanAvailable", testSubtractMoreThanAvailable)
     ]
 }
 

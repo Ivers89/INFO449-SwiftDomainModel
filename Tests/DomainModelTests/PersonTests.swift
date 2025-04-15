@@ -27,11 +27,41 @@ class PersonTests: XCTestCase {
         mike.spouse = Person(firstName: "Bambi", lastName: "Jones", age: 42)
         XCTAssert(mike.spouse != nil)
     }
+    
+    func testNamelessPerson() { //Check that a person's name can't be empty otherwise set to "Default"
+        let namelessPerson = Person(firstName: "", lastName: "", age:0)
+        XCTAssertEqual(namelessPerson.firstName, "Default")
+        XCTAssertEqual(namelessPerson.lastName, "Default")
+      }
+    
+    func testNegativeAgeRevertsToPrevious() { //Don't let a person have their age changed to a negative value
+        let person = Person(firstName: "Michael", lastName: "Jordan", age: 62)
+        person.age = -5
+        XCTAssertEqual(person.age, 62)
+    }
+    
+    func testSelfMarriage() { //You can't love yourself that much
+        let person = Person(firstName: "Solo", lastName: "Bolo", age: 30)
+        person.spouse = person
+        XCTAssertNil(person.spouse)
+    }
+    
+    func testNegativeHourlyWage() {
+        let person = Person(firstName: "Work", lastName: "Hard", age: 25)
+        person.job = Job(title: "Unpaid work", type: .Hourly(-10.0))
+        XCTAssertNil(person.job, "Job with negative hourly wage should be rejected")
+    }
+    
+    
 
     static var allTests = [
         ("testPerson", testPerson),
         ("testAgeRestrictions", testAgeRestrictions),
         ("testAdultAgeRestrictions", testAdultAgeRestrictions),
+        ("testNamelessPerson", testNamelessPerson),
+        ("testNegativeAgeRevertsToPrevious", testNegativeAgeRevertsToPrevious),
+        ("testSelfMarriage", testSelfMarriage),
+        ("testNegativeHourlyWage", testNegativeHourlyWage)
     ]
 }
 
@@ -67,6 +97,7 @@ class FamilyTests : XCTestCase {
         let familyIncome = family.householdIncome()
         XCTAssert(familyIncome == 12000)
     }
+    
   
     static var allTests = [
         ("testFamily", testFamily),
